@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Possible — Interactive Workshop</title>
+<style>
+:root{--green:#08743f;--red:#cf2535;--navy:#172d55;--gold:#f4b942;--paper:#fffdf7;--ink:#17202a}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f6f4;color:var(--ink)}
+.app{max-width:1100px;margin:auto;padding:18px}
+.hero{background:white;border:3px solid var(--green);border-radius:24px;padding:20px;box-shadow:0 8px 24px #0001;position:relative;overflow:hidden}
+.hero:before,.hero:after{content:"";position:absolute;height:10px;width:45%;border-radius:20px;background:linear-gradient(90deg,var(--green) 0 35%,white 35% 45%,var(--red) 45% 70%,white 70% 78%,var(--navy) 78%);opacity:.95}
+.hero:before{top:0;right:0}.hero:after{bottom:0;left:0}
+.tag{display:inline-block;background:var(--green);color:white;padding:7px 13px;border-radius:999px;font-weight:700}
+h1{margin:12px 0 5px;font-size:clamp(27px,5vw,46px)}
+.subtitle{color:#5e6873;margin:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.card{background:white;border:1px solid #d9e2dc;border-radius:20px;padding:18px;box-shadow:0 5px 15px #0000000d}
+.card h2{margin:0 0 10px;color:var(--green)}
+.timer{text-align:center;background:#eef8f2;border-radius:18px;padding:15px;margin-top:14px}
+.time{font-size:52px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--navy)}
+.controls,.words{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+button{min-height:44px;border:0;border-radius:12px;padding:10px 15px;font-size:16px;font-weight:700;cursor:pointer}
+.primary{background:var(--green);color:white}.secondary{background:#eef1f4;color:var(--ink)}
+.word{background:#f5f6f7;border:2px solid #dfe4e7;color:var(--ink)}
+.word.active{background:#dff4e7;border-color:var(--green);color:#075e34}
+.magic{background:#fff7d9;border:2px solid #f1cf5b}.magic.active{background:#ffe892;border-color:#d7a900}
+label{font-weight:700;display:block;margin:8px 0}
+input,textarea{width:100%;font:inherit;border:2px solid #d9e0dd;border-radius:12px;padding:12px;background:white}
+textarea{min-height:110px;resize:vertical}
+.bank{margin-top:14px;border:2px dashed #b9c8bf;border-radius:14px;padding:12px;min-height:54px;background:#fafcfb}
+.checks{display:grid;gap:9px}.check{background:#f4f6f5;border-radius:12px;padding:11px;font-weight:700}
+.success{display:none;background:#e8f8ee;border:2px solid var(--green);border-radius:16px;padding:16px;text-align:center;margin-top:14px}
+.example{display:none;background:#fff8dc;border-radius:14px;padding:14px;margin-top:12px}
+#feedback{font-weight:700;min-height:24px;margin-top:12px}
+.instructions li{margin:9px 0;line-height:1.35}
+footer{text-align:center;color:#6c7479;padding:16px;font-size:13px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.time{font-size:44px}.app{padding:10px}}
+</style>
+</head>
+<body>
+<main class="app">
+<section class="hero">
+<span class="tag">⏱ Workshop Activity</span>
+<h1>Mission Possible 🇰🇼</h1>
+<p class="subtitle">Turn powerful ideas into an inspiring motto for English education in Kuwait.</p>
+</section>
+
+<div class="grid">
+<section class="card">
+<h2>📩 Your Mission</h2>
+<p>As supervisors and educators, work in a small group to create a clear, memorable motto that captures the purpose of English education in Kuwait.</p>
+<label for="team">Team Name</label>
+<input id="team" placeholder="e.g. Team Inspire" maxlength="30">
+<div class="timer">
+<div>MISSION TIMER</div>
+<div class="time" id="time" aria-live="polite">03:00</div>
+<div class="controls">
+<button class="primary" id="start">▶ Start</button>
+<button class="secondary" id="pause">⏸ Pause</button>
+<button class="secondary" id="reset">↻ Reset</button>
+</div>
+</div>
+</section>
+
+<section class="card instructions">
+<h2>🎯 Instructions</h2>
+<ol>
+<li>Work in small groups.</li>
+<li>You have <strong>3 minutes</strong>.</li>
+<li>Select at least <strong>3 Power Words</strong>.</li>
+<li>Include at least <strong>one Magic Word ✨</strong> in your motto.</li>
+<li>Write a short, powerful motto and press <strong>Check Mission</strong>.</li>
+</ol>
+</section>
+</div>
+
+<section class="card" style="margin-top:16px">
+<h2>1. Choose Your Power Words</h2>
+<div class="words" id="power"></div>
+<h3>✨ Magic Words</h3>
+<div class="words" id="magic"></div>
+<div class="bank"><strong>Your Mission Bank:</strong><div id="bank">No words selected yet.</div></div>
+</section>
+
+<div class="grid">
+<section class="card">
+<h2>2. Build Your Motto</h2>
+<textarea id="motto" maxlength="180" placeholder="Write your team motto here…"></textarea>
+<div class="controls">
+<button class="primary" id="check">✓ Check Mission</button>
+<button class="secondary" id="showExample">💡 Reveal Example</button>
+</div>
+<div id="feedback" aria-live="polite"></div>
+<div class="example" id="example"><strong>Example:</strong><br>“Inspire every learner through innovation, communication and opportunity.”</div>
+</section>
+
+<section class="card">
+<h2>3. Mission Checklist</h2>
+<div class="checks">
+<div class="check" id="c1">○ 3+ Power Words selected</div>
+<div class="check" id="c2">○ Magic Word selected</div>
+<div class="check" id="c3">○ Motto written</div>
+</div>
+<div class="success" id="success">
+<div style="font-size:42px">🏆</div>
+<h2 style="margin:4px">MISSION ACCOMPLISHED!</h2>
+<div id="final"></div>
+</div>
+</section>
+</div>
+<footer>Mission Possible • Interactive Workshop Activity • Kuwait 🇰🇼</footer>
+</main>
+
+<script>
+const powerWords=["Purpose","Communication","Confidence","Creativity","Growth","Excellence","Skills","Future","Learners","Global"];
+const magicWords=["Inspire","Empower","Innovate","Connect"];
+const selected=new Set(), selectedMagic=new Set();
+const power=document.getElementById("power"), magic=document.getElementById("magic");
+const bank=document.getElementById("bank"), motto=document.getElementById("motto");
+const feedback=document.getElementById("feedback"), success=document.getElementById("success");
+function makeWord(word,set,box,isMagic=false){
+ const b=document.createElement("button"); b.type="button"; b.className="word"+(isMagic?" magic":""); b.textContent=word+(isMagic?" ✨":"");
+ b.addEventListener("click",()=>{set.has(word)?set.delete(word):set.add(word);b.classList.toggle("active",set.has(word));update();}); box.appendChild(b);
+}
+powerWords.forEach(w=>makeWord(w,selected,power));
+magicWords.forEach(w=>makeWord(w,selectedMagic,magic,true));
+function update(){
+ const all=[...selected,...selectedMagic]; bank.textContent=all.length?all.join(" • "):"No words selected yet.";
+ document.getElementById("c1").textContent=(selected.size>=3?"✓":"○")+" 3+ Power Words selected";
+ document.getElementById("c2").textContent=(selectedMagic.size?"✓":"○")+" Magic Word selected";
+ document.getElementById("c3").textContent=(motto.value.trim()?"✓":"○")+" Motto written";
+}
+motto.addEventListener("input",update);
+document.getElementById("check").addEventListener("click",()=>{
+ const text=motto.value.trim(), lower=text.toLowerCase();
+ if(selected.size<3){feedback.textContent="⚠️ Select at least 3 Power Words.";success.style.display="none";return}
+ if(!selectedMagic.size){feedback.textContent="⚠️ Select a Magic Word ✨.";success.style.display="none";return}
+ if(!text){feedback.textContent="⚠️ Write your motto first.";success.style.display="none";return}
+ if(![...selectedMagic].some(w=>lower.includes(w.toLowerCase()))){feedback.textContent="✨ Put your selected Magic Word inside the motto.";success.style.display="none";return}
+ const count=text.split(/\s+/).length;
+ feedback.textContent=count>=6&&count<=15?"🌟 Excellent! Clear, concise and inspiring.":"✅ Mission complete! For extra impact, aim for 6–15 words.";
+ document.getElementById("final").textContent=(document.getElementById("team").value.trim()||"Your team")+': “'+text+'”';
+ success.style.display="block";
+});
+document.getElementById("showExample").addEventListener("click",()=>{const e=document.getElementById("example");e.style.display=e.style.display==="block"?"none":"block"});
+let remaining=180,timer=null;const time=document.getElementById("time");
+function draw(){time.textContent=String(Math.floor(remaining/60)).padStart(2,"0")+":"+String(remaining%60).padStart(2,"0")}
+document.getElementById("start").addEventListener("click",()=>{if(timer||remaining<=0)return;timer=setInterval(()=>{remaining--;draw();if(remaining<=0){clearInterval(timer);timer=null;feedback.textContent="⏰ Time! Share your motto with the room."}},1000)});
+document.getElementById("pause").addEventListener("click",()=>{clearInterval(timer);timer=null});
+document.getElementById("reset").addEventListener("click",()=>{clearInterval(timer);timer=null;remaining=180;draw();selected.clear();selectedMagic.clear();document.querySelectorAll(".word").forEach(b=>b.classList.remove("active"));motto.value="";document.getElementById("team").value="";feedback.textContent="";success.style.display="none";document.getElementById("example").style.display="none";update()});
+update();draw();
+</script>
+</body>
+</html>
